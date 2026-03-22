@@ -25,18 +25,20 @@ export default function Contact() {
     e.preventDefault();
 
     const serviceID = 'service_0rgb903';
-    const templateID = 'template_fycbbqk'; 
+    const templateID = 'template_yencl9w';
     const publicKey = 'W6TxmDLajNVv2bhqa';
 
-    emailjs.sendForm(serviceID, templateID, e.target, publicKey)
+    emailjs.sendForm(serviceID, templateID, e.target, {
+      publicKey: publicKey,
+    })
       .then((result) => {
-        console.log(result.text);
+        console.log('Success:', result.text);
         setSent(true);
         setTimeout(() => setSent(false), 3000);
         setFormData({ name: '', email: '', message: '' });
       }, (error) => {
-        console.log(error.text);
-        alert('Failed to send the message. Please try again.');
+        console.error('EmailJS Error:', error);
+        alert(`Failed to send the message. Error: ${error.text || error.message}`);
       });
   };
 
