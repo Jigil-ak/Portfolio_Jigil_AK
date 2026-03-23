@@ -129,6 +129,81 @@ class SnowParticle {
   }
 }
 
+// ── Cached Assets ──────────────────────────
+let cachedFishCanvas = null;
+let cachedTurtleCanvas = null;
+
+function getCachedFish() {
+  if (cachedFishCanvas) return cachedFishCanvas;
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width = 100;
+  offCanvas.height = 100;
+  const octx = offCanvas.getContext('2d');
+  
+  octx.translate(50, 50);
+  octx.fillStyle = 'rgba(0, 30, 50, 0.4)';
+  octx.filter = 'blur(1.5px)';
+  
+  octx.beginPath();
+  octx.moveTo(30, 0); // nose
+  octx.quadraticCurveTo(10, -10, -15, -4); // top body
+  octx.lineTo(-25, -12); // top tail
+  octx.lineTo(-20, 0); // tail center
+  octx.lineTo(-25, 12); // bottom tail
+  octx.lineTo(-15, 4); // bottom body connect
+  octx.quadraticCurveTo(10, 10, 30, 0); // bottom body
+  octx.closePath();
+  octx.fill();
+  
+  cachedFishCanvas = offCanvas;
+  return offCanvas;
+}
+
+function getCachedTurtle() {
+  if (cachedTurtleCanvas) return cachedTurtleCanvas;
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width = 120;
+  offCanvas.height = 120;
+  const octx = offCanvas.getContext('2d');
+  
+  octx.translate(60, 60);
+  octx.fillStyle = 'rgba(0, 30, 45, 0.25)';
+  octx.filter = 'blur(2.5px)';
+  
+  octx.beginPath();
+  octx.ellipse(0, 0, 22, 16, 0, 0, Math.PI * 2); // Shell
+  octx.ellipse(26, 0, 6, 4, 0, 0, Math.PI * 2);  // Head
+  octx.fill();
+
+  // Basic static flippers for the cached version
+  octx.beginPath();
+  octx.moveTo(12, 12);
+  octx.quadraticCurveTo(0, 35, -15, 40);
+  octx.quadraticCurveTo(5, 25, 0, 12);
+  octx.fill();
+
+  octx.beginPath();
+  octx.moveTo(12, -12);
+  octx.quadraticCurveTo(0, -35, -15, -40);
+  octx.quadraticCurveTo(5, -25, 0, -12);
+  octx.fill();
+
+  octx.beginPath();
+  octx.moveTo(-15, 8);
+  octx.quadraticCurveTo(-25, 20, -30, 18);
+  octx.quadraticCurveTo(-25, 10, -18, 5);
+  octx.fill();
+
+  octx.beginPath();
+  octx.moveTo(-15, -8);
+  octx.quadraticCurveTo(-25, -20, -30, -18);
+  octx.quadraticCurveTo(-25, -10, -18, -5);
+  octx.fill();
+  
+  cachedTurtleCanvas = offCanvas;
+  return offCanvas;
+}
+
 // ── Distant Fish Silhouette ──────────────────
 class Fish {
   constructor(w, h) {
@@ -162,21 +237,11 @@ class Fish {
       ctx.scale(-1, 1);
     }
     ctx.scale(this.size, this.size);
+    ctx.globalAlpha = this.opacity !== undefined ? this.opacity : 1;
 
-    ctx.fillStyle = 'rgba(0,30,50,0.4)';
-    ctx.filter = 'blur(1.5px)';
-    
-    // Simple fish shape
-    ctx.beginPath();
-    ctx.moveTo(30, 0); // nose
-    ctx.quadraticCurveTo(10, -10, -15, -4); // top body
-    ctx.lineTo(-25, -12); // top tail
-    ctx.lineTo(-20, 0); // tail center
-    ctx.lineTo(-25, 12); // bottom tail
-    ctx.lineTo(-15, 4); // bottom body connect
-    ctx.quadraticCurveTo(10, 10, 30, 0); // bottom body
-    ctx.closePath();
-    ctx.fill();
+    // Use cached optimized canvas drawing
+    const img = getCachedFish();
+    ctx.drawImage(img, -50, -50);
 
     ctx.restore();
   }
@@ -220,45 +285,9 @@ class Turtle {
     ctx.rotate(angle);
     ctx.scale(this.size, this.size);
 
-    // Exact background blend: Dark teal/navy, very low opacity & highly blurred
-    ctx.fillStyle = 'rgba(0, 30, 45, 0.25)';
-    ctx.filter = 'blur(2.5px)';
-    
-    const flap = Math.sin(this.phase) * 0.8; // Flipper curve offset
-
-    // Central Shell & Head
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 22, 16, 0, 0, Math.PI * 2); // Shell
-    ctx.ellipse(26, 0, 6, 4, 0, 0, Math.PI * 2);  // Head
-    ctx.fill();
-
-    // Front Right Flipper
-    ctx.beginPath();
-    ctx.moveTo(12, 12);
-    ctx.quadraticCurveTo(0 - flap*5, 35 + flap*10, -15, 40 - flap*5);
-    ctx.quadraticCurveTo(5, 25, 0, 12);
-    ctx.fill();
-
-    // Front Left Flipper
-    ctx.beginPath();
-    ctx.moveTo(12, -12);
-    ctx.quadraticCurveTo(0 - flap*5, -35 - flap*10, -15, -40 + flap*5);
-    ctx.quadraticCurveTo(5, -25, 0, -12);
-    ctx.fill();
-
-    // Back Right Flipper
-    ctx.beginPath();
-    ctx.moveTo(-15, 8);
-    ctx.quadraticCurveTo(-25, 20, -30, 18);
-    ctx.quadraticCurveTo(-25, 10, -18, 5);
-    ctx.fill();
-
-    // Back Left Flipper
-    ctx.beginPath();
-    ctx.moveTo(-15, -8);
-    ctx.quadraticCurveTo(-25, -20, -30, -18);
-    ctx.quadraticCurveTo(-25, -10, -18, -5);
-    ctx.fill();
+    // Use predefined cached turtle (huge optimization, removes blur logic from frame loops)
+    const img = getCachedTurtle();
+    ctx.drawImage(img, -60, -60);
 
     ctx.restore();
   }
@@ -341,20 +370,25 @@ class Jellyfish {
 
     // ── Outer Volumetric Glow ──
     const glowRadius = s * 3;
-    const gradGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowRadius);
-    gradGlow.addColorStop(0, `hsla(${this.hue},${this.sat}%,70%,0.15)`);
-    gradGlow.addColorStop(0.4, `hsla(${this.hue},${this.sat}%,60%,0.08)`);
-    gradGlow.addColorStop(1, `hsla(${this.hue},${this.sat}%,40%,0)`);
-    ctx.fillStyle = gradGlow;
-    ctx.beginPath();
-    ctx.arc(0, 0, glowRadius, 0, Math.PI * 2);
-    ctx.fill();
+    const isMobile = window.innerWidth < 768;
+    
+    // Skip heavy glow rendering on mobile to boost FPS
+    if (!isMobile) {
+      const gradGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, glowRadius);
+      gradGlow.addColorStop(0, `hsla(${this.hue},${this.sat}%,70%,0.15)`);
+      gradGlow.addColorStop(0.4, `hsla(${this.hue},${this.sat}%,60%,0.08)`);
+      gradGlow.addColorStop(1, `hsla(${this.hue},${this.sat}%,40%,0)`);
+      ctx.fillStyle = gradGlow;
+      ctx.beginPath();
+      ctx.arc(0, 0, glowRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
     // ── Thick Inner Arms (Oral Arms) ──
     ctx.save();
-    // Blur trailing parts heavily
-    ctx.filter = 'blur(1.5px)';
-    ctx.shadowBlur = 15;
+    // Use blur purely on desktop
+    ctx.filter = isMobile ? 'none' : 'blur(1.5px)';
+    ctx.shadowBlur = isMobile ? 5 : 15;
     ctx.shadowColor = `hsla(${this.hue},${this.sat}%,70%,0.8)`;
     
     for (let i = 0; i < 4; i++) {
@@ -379,7 +413,7 @@ class Jellyfish {
 
     // ── Thin Long Trailing Tentacles ──
     ctx.save();
-    ctx.filter = 'blur(0.5px)';
+    ctx.filter = isMobile ? 'none' : 'blur(0.5px)';
     for (let i = 0; i < 8; i++) {
       const tx = ((i - 3.5) / 3.5) * s * 0.9;
       // Tendrils stretch behind as bell pulses forward
@@ -423,12 +457,12 @@ class Jellyfish {
     bellGrad.addColorStop(1, `hsla(${this.hue},70%,50%,0.1)`);
     
     ctx.fillStyle = bellGrad;
-    ctx.shadowBlur = 20;
+    ctx.shadowBlur = isMobile ? 5 : 20;
     ctx.shadowColor = `hsla(${this.hue}, 100%, 75%, 0.6)`;
     ctx.fill();
 
     // ── Internal Organs (Gonads) inside the translucent bell ──
-    ctx.filter = 'blur(2px)';
+    ctx.filter = isMobile ? 'none' : 'blur(2px)';
     ctx.beginPath();
     ctx.ellipse(0, -s * 0.35, s * 0.35, s * 0.2, 0, 0, Math.PI * 2);
     ctx.fillStyle = `hsla(${this.hue},80%,90%,0.6)`;
@@ -564,19 +598,20 @@ export default function OceanBackground() {
     };
     resize();
 
-    // Create entities
-    const snowCount = Math.min(120, Math.floor((w * h) / 7500)); // Increased density
-    const snow = Array.from({ length: snowCount }, () => new SnowParticle(w, h));
+    // Create entities - Scale down massively on mobile for buttery smooth performance
+    const isMobile = w < 768;
+    const snowCount = isMobile ? Math.min(50, Math.floor((w * h) / 12000)) : Math.min(120, Math.floor((w * h) / 7500));
+    const snow = Array.from({ length: snowCount }, (_, i) => new SnowParticle(w, h, i));
     
-    const jellyfishCount = Math.min(5, Math.max(3, Math.floor(w / 400)));
+    const jellyfishCount = isMobile ? Math.min(2, Math.floor(h / 300)) : Math.min(5, Math.max(3, Math.floor(w / 400)));
     const jellyfish = Array.from({ length: jellyfishCount }, (_, i) => new Jellyfish(w, h, i));
     
-    // 3-6 distant fish
-    const fishCount = Math.floor(rand(3, 7));
+    // 2-6 distant fish
+    const fishCount = isMobile ? Math.floor(rand(2, 4)) : Math.floor(rand(4, 7));
     const fish = Array.from({ length: fishCount }, () => new Fish(w, h));
 
-    // 1-3 distant turtles
-    const turtleCount = Math.floor(rand(1, 4));
+    // 0-2 distant turtles
+    const turtleCount = isMobile ? Math.floor(rand(0, 2)) : Math.floor(rand(1, 4));
     const turtles = Array.from({ length: turtleCount }, () => new Turtle(w, h));
 
     stateRef.current = { snow, jellyfish, fish, turtles, trails: [], time: 0 };

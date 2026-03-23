@@ -65,7 +65,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold tracking-tight mb-4"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-extrabold tracking-tight mb-4"
           >
             <span className="text-white">I am </span>
             <span className="text-gradient">Jigil A K</span>
@@ -87,9 +87,9 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.65 }}
-          className="h-10 md:h-12 flex items-center justify-center mb-10"
+          className="min-h-[60px] md:h-12 flex items-center justify-center mb-10"
         >
-          <span className="text-2xl md:text-3xl font-mono text-cyan-400/80 mr-3 animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+          <span className="text-xl sm:text-2xl md:text-3xl font-mono text-cyan-400/80 mr-3 animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
             {'>'}
           </span>
           <TypeAnimation
@@ -103,7 +103,7 @@ export default function Hero() {
             speed={50}
             deletionSpeed={40}
             repeat={Infinity}
-            className="text-2xl md:text-3xl font-mono font-bold text-cyan-100 drop-shadow-[0_0_12px_rgba(34,211,238,0.8)]"
+            className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-cyan-100 drop-shadow-[0_0_12px_rgba(34,211,238,0.8)]"
           />
         </motion.div>
 
