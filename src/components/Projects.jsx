@@ -1,28 +1,43 @@
 import { motion } from 'framer-motion';
-import { HiExternalLink, HiCode, HiChip, HiDatabase, HiShoppingCart, HiBookOpen, HiChartBar } from 'react-icons/hi';
+import { HiCode, HiChip, HiDatabase, HiShoppingCart, HiBookOpen, HiChartBar } from 'react-icons/hi';
+import { FaGithub } from 'react-icons/fa';
 
 const projects = [
+  {
+    title: 'Autonomous Multi-Agent BI Platform',
+    subtitle: 'GenAI & Agentic AI',
+    description:
+      'Multi-agent AI platform generating business strategies, competitor analysis, pricing plans, and growth roadmaps. Features AI agents for research, planning, critique, QA, and memory management using Gemini LLMs with FastAPI backend and real-time Streamlit dashboard with workflow visualization.',
+    tags: ['Python', 'FastAPI', 'Streamlit', 'Gemini API', 'ChromaDB', 'LangChain'],
+    icon: HiDatabase,
+    gradient: 'from-cyan-500/20 to-indigo-500/20',
+    accentColor: 'text-cyan-400',
+    borderHover: 'hover:border-cyan-500/30',
+    github: 'https://github.com/Jigil-ak/autonomous-multi-agent-bi-platform.git',
+  },
   {
     title: 'Medical Chatbot',
     subtitle: 'LLM & RAG',
     description:
-      'Built with LangChain, Pinecone, and FLAN-T5 for context-aware medical knowledge retrieval. Implements RAG pipeline for accurate, grounded responses.',
-    tags: ['LangChain', 'Pinecone', 'FLAN-T5', 'RAG', 'Python'],
+      'Built with LangChain, Pinecone, and FLAN-T5 for context-aware medical knowledge retrieval. Implements RAG pipeline for accurate, grounded responses deployed on Flask and AWS.',
+    tags: ['LangChain', 'Pinecone', 'FLAN-T5', 'RAG', 'Flask', 'AWS'],
     icon: HiChip,
     gradient: 'from-blue-500/20 to-cyan-500/20',
     accentColor: 'text-blue-400',
     borderHover: 'hover:border-blue-500/30',
+    github: 'https://github.com/Jigil-ak/Medical-Chatbot-with-LLMs-LangChain-Pinecone-Flask-AWS.git',
   },
   {
     title: 'Dental X-ray AI',
     subtitle: 'Computer Vision',
     description:
-      'CNN-based YOLOv5 model to detect caries and classify tooth types with real-time bounding boxes. Trained on custom-annotated dental radiograph dataset.',
+      'CNN-based YOLOv5 model to detect caries and classify tooth types with real-time bounding boxes. Trained on custom-annotated dental radiograph dataset with enhanced image analysis.',
     tags: ['YOLOv5', 'CNN', 'OpenCV', 'Python', 'Deep Learning'],
     icon: HiCode,
     gradient: 'from-purple-500/20 to-pink-500/20',
     accentColor: 'text-purple-400',
     borderHover: 'hover:border-purple-500/30',
+    github: 'https://github.com/Jigil-ak/Enhanced-Dental-Image-Analysis',
   },
   {
     title: 'Smart Shopping App',
@@ -34,6 +49,7 @@ const projects = [
     gradient: 'from-emerald-500/20 to-teal-500/20',
     accentColor: 'text-emerald-400',
     borderHover: 'hover:border-emerald-500/30',
+    github: null,
   },
   {
     title: 'Book Recommendation Engine',
@@ -45,6 +61,7 @@ const projects = [
     gradient: 'from-amber-500/20 to-orange-500/20',
     accentColor: 'text-amber-400',
     borderHover: 'hover:border-amber-500/30',
+    github: 'https://github.com/Jigil-ak/Book_Recomendation_System.git',
   },
   {
     title: 'Workforce Productivity Analysis',
@@ -56,6 +73,7 @@ const projects = [
     gradient: 'from-rose-500/20 to-red-500/20',
     accentColor: 'text-rose-400',
     borderHover: 'hover:border-rose-500/30',
+    github: null,
   },
 ];
 
@@ -110,12 +128,12 @@ export default function Projects() {
               <motion.div
                 key={project.title}
                 variants={cardVariants}
-                className={`project-card glass rounded-2xl overflow-hidden border border-slate-700/30 ${project.borderHover} group`}
+                className={`project-card glass rounded-2xl overflow-hidden border border-slate-700/30 ${project.borderHover} group flex flex-col`}
               >
                 {/* Gradient Header */}
                 <div className={`h-2 bg-gradient-to-r ${project.gradient}`} />
 
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-1">
                   {/* Icon & Title */}
                   <div className="flex items-start gap-4 mb-4">
                     <div className={`p-3 rounded-xl bg-gradient-to-br ${project.gradient} flex-shrink-0`}>
@@ -132,12 +150,12 @@ export default function Projects() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-slate-400 leading-relaxed mb-5">
+                  <p className="text-sm text-slate-400 leading-relaxed mb-5 flex-1">
                     {project.description}
                   </p>
 
                   {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-4">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
@@ -147,6 +165,19 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
+
+                  {/* GitHub Link */}
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 text-xs font-mono font-medium ${project.accentColor} hover:text-white border border-slate-700/40 hover:border-current rounded-lg px-3 py-2 transition-all duration-300 w-fit bg-slate-800/40 hover:bg-slate-700/40 mt-auto`}
+                    >
+                      <FaGithub size={14} />
+                      View on GitHub
+                    </a>
+                  )}
                 </div>
               </motion.div>
             );
