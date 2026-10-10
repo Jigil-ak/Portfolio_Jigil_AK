@@ -1,20 +1,27 @@
-import { useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { HiArrowDown } from 'react-icons/hi';
 
 export default function Hero() {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  // PERF FIX: replaced useState(tilt) with a ref + CSS custom properties.
+  // Mouse move no longer triggers React re-renders — transform is applied
+  // directly via the DOM style API, keeping it off the React reconciler.
+  const cardRef = useRef(null);
 
   const handleMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: y * 8, y: -x * 8 });
+    if (cardRef.current) {
+      cardRef.current.style.transform = `perspective(1200px) rotateX(${y * 8}deg) rotateY(${-x * 8}deg)`;
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    setTilt({ x: 0, y: 0 });
+    if (cardRef.current) {
+      cardRef.current.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+    }
   }, []);
 
   const stats = [
@@ -35,13 +42,10 @@ export default function Hero() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          transform: `perspective(1200px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-          transition: 'transform 0.15s ease-out',
-        }}
+        ref={cardRef}
+        style={{ transition: 'transform 0.15s ease-out' }}
         className="relative z-10 text-center px-6 max-w-4xl"
       >
-        {/* Badge */}
         {/* Title Group with floating effect */}
         <motion.div
           animate={{ y: [0, -8, 0] }}

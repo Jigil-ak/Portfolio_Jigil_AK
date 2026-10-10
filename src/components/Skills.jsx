@@ -2,10 +2,13 @@ import { motion } from 'framer-motion';
 
 /* ───────────────────────────────────────────────
    Deep-Sea Skills Stream
-   • 5 infinite-looping marquee rows
+   • 4 infinite-looping marquee rows
    • Alternating direction (L→R / R→L)
    • Glassmorphism cards with bioluminescent glow
-   • GPU-accelerated, 60fps smooth
+   • PERF: Pure CSS @keyframes marquee — runs on
+     compositor thread with zero JS overhead.
+     Replaces the previous Framer Motion x-animation
+     which kept the JS thread busy every frame.
    ─────────────────────────────────────────────── */
 
 // ── Logo resolver (CDN + fallback) ──────────
@@ -78,22 +81,22 @@ const rows = [
   {
     skills: ['Python', 'SQL', 'Machine Learning', 'Deep Learning', 'NLP', 'Generative AI', 'LLM', 'RAG', 'TensorFlow', 'PyTorch', 'Keras', 'Scikit-learn', 'Pandas', 'NumPy'],
     direction: 'left',
-    speed: 25,
+    duration: '25s',
   },
   {
     skills: ['OpenCV', 'YOLOv5', 'Hugging Face', 'NLTK', 'Flask', 'Streamlit', 'REST API', 'Model Deployment', 'MLOps', 'CI/CD', 'Data Analysis', 'EDA', 'Feature Engineering', 'Predictive Analytics', 'Statistical Modeling'],
     direction: 'right',
-    speed: 28,
+    duration: '28s',
   },
   {
     skills: ['Data Visualization', 'Matplotlib', 'Seaborn', 'Power BI', 'MySQL', 'SQLite', 'Cassandra', 'DBMS', 'Data Structures', 'OOP', 'SDLC', 'Agile', 'Debugging', 'Git', 'Jupyter Notebook'],
     direction: 'left',
-    speed: 26,
+    duration: '26s',
   },
   {
     skills: ['VS Code', 'Excel', 'Hadoop', 'AWS', 'Prompt Engineering', 'PHP', 'C', 'HTML', 'ChatGPT', 'OpenAI', 'Gemini', 'Claude', 'DeepSeek', 'Perplexity'],
     direction: 'right',
-    speed: 30,
+    duration: '30s',
   },
 ];
 
@@ -115,6 +118,7 @@ function SkillCard({ name }) {
           alt={name}
           className="w-8 h-8 md:w-[2.25rem] md:h-[2.25rem] object-contain mb-1.5 opacity-80 group-hover:opacity-100 transition-opacity duration-300"
           loading="lazy"
+          decoding="async"
         />
         <span className="text-[9px] md:text-[10px] text-slate-400 group-hover:text-white font-medium text-center leading-tight px-1 transition-colors duration-300">
           {name}
@@ -124,16 +128,13 @@ function SkillCard({ name }) {
   );
 }
 
-// ── Marquee Row ─────────────────────────────
-function MarqueeRow({ skills, direction, speed }) {
-  // Duplicate skills 3x to ensure seamless loop
+// ── Marquee Row — Pure CSS animation ────────
+// PERF FIX: Replaced Framer Motion x-animation with a pure CSS @keyframes
+// marquee. The animation runs on the GPU compositor thread with zero JS
+// involvement, completely freeing the main thread during scroll.
+function MarqueeRow({ skills, direction, duration }) {
+  // Duplicate skills 3x to ensure a seamless visual loop
   const tripled = [...skills, ...skills, ...skills];
-
-  // Total width estimate for one set
-  // Desktop: w-[7rem] (112px) + mx-2 (16px) = 128px per card
-  // Mobile: w-[6rem] (96px) + mx-1.5 (12px) = 108px per card -> we use max
-  const setWidth = skills.length * 128;
-
   const isLeft = direction === 'left';
 
   return (
@@ -142,24 +143,17 @@ function MarqueeRow({ skills, direction, speed }) {
       <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 z-10 bg-gradient-to-r from-[#001219] to-transparent pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 z-10 bg-gradient-to-l from-[#001219] to-transparent pointer-events-none" />
 
-      <motion.div
+      <div
         className="flex"
-        animate={{
-          x: isLeft ? [0, -setWidth] : [-setWidth, 0],
+        style={{
+          animation: `${isLeft ? 'marquee-left' : 'marquee-right'} ${duration} linear infinite`,
+          willChange: 'transform',
         }}
-        transition={{
-          x: {
-            duration: speed,
-            repeat: Infinity,
-            ease: 'linear',
-          },
-        }}
-        style={{ willChange: 'transform' }}
       >
         {tripled.map((skill, i) => (
           <SkillCard key={`${skill}-${i}`} name={skill} />
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -170,9 +164,7 @@ export default function Skills() {
     <section
       id="skills"
       className="relative py-16 md:py-24 overflow-hidden"
-      style={{
-        filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.4))',
-      }}
+      style={{ filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.4))' }}
     >
       {/* Section Title */}
       <motion.div
@@ -204,7 +196,7 @@ export default function Skills() {
             <MarqueeRow
               skills={row.skills}
               direction={row.direction}
-              speed={row.speed}
+              duration={row.duration}
             />
           </motion.div>
         ))}

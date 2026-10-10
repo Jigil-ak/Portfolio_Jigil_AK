@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   HiLocationMarker,
@@ -57,25 +57,34 @@ const socialLinks = [
 ];
 
 export default function About() {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [auraPos, setAuraPos] = useState({ x: 50, y: 50 });
+  // PERF FIX: replaced useState(tilt) + useState(auraPos) with direct DOM refs.
+  // No React re-renders on mousemove — everything written via style API directly.
+  const cardWrapperRef = useRef(null);
+  const auraRef = useRef(null);
 
   const handleMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
-    
-    // Tilt calculation
+
     const tiltX = (y - 0.5) * 15;
     const tiltY = -(x - 0.5) * 15;
-    
-    setTilt({ x: tiltX, y: tiltY });
-    setAuraPos({ x: x * 100, y: y * 100 });
+
+    if (cardWrapperRef.current) {
+      cardWrapperRef.current.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(var(--float-y, 0px))`;
+    }
+    if (auraRef.current) {
+      auraRef.current.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(56,189,248,0.7), rgba(168,85,247,0.4), transparent 60%)`;
+    }
   }, []);
 
   const handleMouseLeave = useCallback(() => {
-    setTilt({ x: 0, y: 0 });
-    setAuraPos({ x: 50, y: 50 });
+    if (cardWrapperRef.current) {
+      cardWrapperRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(var(--float-y, 0px))';
+    }
+    if (auraRef.current) {
+      auraRef.current.style.background = 'radial-gradient(circle at 50% 50%, rgba(56,189,248,0.7), rgba(168,85,247,0.4), transparent 60%)';
+    }
   }, []);
 
   return (
@@ -104,45 +113,34 @@ export default function About() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="flex-shrink-0"
-            style={{ perspective: 1000 }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >
-            <motion.div
-              animate={{
-                rotateX: tilt.x,
-                rotateY: tilt.y,
-                y: [0, -8, 0] // Floating effect combined with 3D tilt
-              }}
-              transition={{
-                rotateX: { type: 'spring', stiffness: 300, damping: 20 },
-                rotateY: { type: 'spring', stiffness: 300, damping: 20 },
-                y: { duration: 5, repeat: Infinity, ease: 'easeInOut' }
-              }}
-              className="relative"
-            >
-              {/* Dynamic Outer Aura with Gentle Pulse */}
-              <motion.div 
-                animate={{ opacity: [0.5, 0.8, 0.5], scale: [0.95, 1.05, 0.95] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -inset-6 rounded-[2.5rem] blur-2xl transition-all duration-300 pointer-events-none"
+            {/* Float wrapper — CSS animation only, no JS loop */}
+            <div className="about-float-wrapper" ref={cardWrapperRef} style={{ transition: 'transform 0.15s ease-out' }}>
+              {/* Dynamic Outer Aura — driven by CSS animation, aura color driven by DOM ref */}
+              <div
+                ref={auraRef}
+                className="absolute -inset-6 rounded-[2.5rem] blur-2xl pointer-events-none about-aura-pulse"
                 style={{
-                  background: `radial-gradient(circle at ${auraPos.x}% ${auraPos.y}%, rgba(56,189,248,0.7), rgba(168,85,247,0.4), transparent 60%)`
+                  background: 'radial-gradient(circle at 50% 50%, rgba(56,189,248,0.7), rgba(168,85,247,0.4), transparent 60%)',
                 }}
               />
 
-              {/* Glass frame — SQUARE with rounded corners */}
+              {/* Glass frame */}
               <div className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-2xl glass-strong border border-white/10 p-1.5 shadow-[0_0_40px_rgba(56,189,248,0.2)]">
                 <img
                   src="/blacksuit_cleaned.png"
                   alt="Jigil A K"
                   className="w-full h-full rounded-xl object-cover pointer-events-none"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
 
               {/* Status dot */}
               <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-emerald-400 border-[3px] border-dark-900 shadow-lg shadow-emerald-400/40" />
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* ── Text & Details ──────────────────────── */}

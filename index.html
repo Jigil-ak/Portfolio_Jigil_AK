@@ -2,13 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Jigil A K — AI/ML Engineer & Data Scientist. Specializing in Machine Learning, Deep Learning, NLP, and Generative AI." />
     <title>Jigil A K — AI/ML Engineer & Data Scientist</title>
+
+    <!--
+      PERF FIX: Reduced Google Fonts from 17 variants to 9.
+      Dropped weight 300 (not meaningfully used), narrowed JetBrains Mono.
+      Added font-display=swap to prevent render-blocking on slow connections.
+      Preconnect hints remain to start DNS+TLS handshake as early as possible.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    >
   </head>
   <body>
     <div id="root"></div>

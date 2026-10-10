@@ -38,17 +38,21 @@ body {
 }
 
 /* ── Glassmorphism ───────────────────────── */
+/* PERF FIX: Reduced blur radius — was 15/20px, now 8/12px.
+   backdrop-filter: blur() forces a separate GPU compositing layer per
+   element. Reducing the radius maintains the glass look while cutting
+   GPU work roughly in half per element. */
 .glass {
   background: rgba(0, 18, 25, 0.55);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(59, 130, 246, 0.08);
 }
 
 .glass-strong {
   background: rgba(0, 18, 25, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(59, 130, 246, 0.12);
 }
 
@@ -157,4 +161,64 @@ body {
   bottom: 0;
   width: 2px;
   background: linear-gradient(180deg, #3b82f6 0%, #8b5cf6 50%, rgba(139, 92, 246, 0.1) 100%);
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   PHASE 3 PERF FIX: Pure CSS marquee keyframes
+   These replace the Framer Motion JS-driven x animations in Skills.jsx.
+   Running on the compositor thread = zero JS main thread cost during scroll.
+   Uses 33.333% (1/3 of the tripled set) so the loop is perfectly seamless.
+   ──────────────────────────────────────────────────────────────────────── */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-33.333%); }
+}
+
+@keyframes marquee-right {
+  from { transform: translateX(-33.333%); }
+  to   { transform: translateX(0); }
+}
+
+/* ── About Profile Float Animation ──────── */
+/* PERF FIX: CSS-only float replaces Framer Motion repeat:Infinity loop */
+@keyframes about-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+.about-float-wrapper {
+  position: relative;
+  animation: about-float 5s ease-in-out infinite;
+}
+
+/* PERF FIX: CSS-only aura pulse replaces Framer Motion repeat:Infinity */
+@keyframes aura-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.95); }
+  50%       { opacity: 0.8; transform: scale(1.05); }
+}
+
+.about-aura-pulse {
+  animation: aura-pulse 4s ease-in-out infinite;
+}
+
+/* ── Contain sections for independent repaint ── */
+/* PERF FIX: tells browser each section can be repainted independently */
+section {
+  contain: layout paint;
+}
+
+/* ── Respect user's reduced-motion preference ── */
+/* PERF: also satisfies accessibility requirements */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }
