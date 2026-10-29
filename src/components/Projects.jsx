@@ -1,9 +1,41 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiCode, HiChip, HiDatabase, HiShoppingCart, HiBookOpen, HiChartBar, HiLightningBolt, HiX } from 'react-icons/hi';
+import { HiCode, HiChip, HiDatabase, HiShoppingCart, HiBookOpen, HiChartBar, HiLightningBolt, HiX, HiGlobe } from 'react-icons/hi';
 import { FaGithub } from 'react-icons/fa';
 
 const projects = [
+  {
+    title: 'Multi-Agent AI Travel Planner',
+    subtitle: 'Agentic AI & MCP',
+    description:
+      'Architected a production-grade multi-agent travel planning system using LangGraph and MCP, orchestrating 6 specialized agents with dynamic routing, real-time data from 3 live APIs, Human-in-the-Loop approval flows, and PostgreSQL-backed checkpointing for resilient async pipelines.',
+    tags: ['LangGraph', 'MCP', 'Python', 'PostgreSQL', 'AviationStack', 'Tavily', 'OpenWeatherMap', 'FastMCP'],
+    icon: HiGlobe,
+    gradient: 'from-sky-500/20 to-teal-500/20',
+    accentColor: 'text-sky-400',
+    borderHover: 'hover:border-sky-500/30',
+    github: null,
+    details: {
+      overview:
+        'A production-grade multi-agent AI travel planner built on LangGraph and the Model Context Protocol (MCP). The system orchestrates 6 specialized agents — Supervisor, Flight, Hotel, Weather, Budget, and Itinerary — with intelligent dynamic routing that eliminates redundant agent calls. It integrates 3 live external data sources and supports Human-in-the-Loop approval cycles with persistent async checkpointing via PostgreSQL.',
+      architecture: [
+        'Supervisor Agent applies an Input Guardrail pattern to classify and validate incoming prompts, then extracts structured trip constraints (destination, duration, budget, travel style) via LLM-powered JSON parsing.',
+        'Dynamic Routing Engine selectively activates only the relevant specialist agents based on parsed constraints, eliminating redundant LLM invocations across the pipeline.',
+        'Flight Agent connects to AviationStack via MCP stdio/uvx transport to retrieve live flight schedules and pricing in real time.',
+        'Weather Agent queries a custom FastMCP OpenWeatherMap server to fetch destination forecasts and climate data beyond LLM training cutoff.',
+        'Hotel & Budget Agents use Tavily web search via MCP streamable_http to surface current accommodation options and cost estimates.',
+        'Itinerary Agent synthesizes all upstream agent outputs into a coherent, day-by-day travel plan tailored to user constraints.',
+        'Human-in-the-Loop (HITL) layer leverages LangGraph\'s native interrupt() mechanism to pause the pipeline, present the draft plan for user review, and resume seamlessly after approval.',
+        'PostgresSaver checkpointing persists full pipeline state to PostgreSQL, enabling resilient async approval cycles with zero data loss across interruptions.',
+      ],
+      keyAchievements: [
+        'Architected a 6-agent LangGraph system with MCP-based tool orchestration, achieving dynamic routing that eliminates redundant agent calls and reduces unnecessary LLM invocations.',
+        'Engineered a Supervisor + Input Guardrail pattern that classifies user prompts and extracts structured trip constraints via LLM-powered JSON parsing, ensuring only relevant agents are activated.',
+        'Integrated 3 real-time MCP data sources (AviationStack, Tavily, custom FastMCP OpenWeatherMap) to provide live external context beyond model training data.',
+        'Implemented Human-in-the-Loop approval flows using LangGraph\'s interrupt() mechanism with PostgreSQL-backed checkpointing, enabling the pipeline to pause and resume seamlessly across async cycles.',
+      ],
+    },
+  },
   {
     title: 'Autonomous Multi-Agent BI Platform',
     subtitle: 'GenAI & Agentic AI',
