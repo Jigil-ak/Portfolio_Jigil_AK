@@ -6,49 +6,214 @@ import {
   FaCogs,
   FaChartLine,
   FaDatabase,
+  FaRobot,
+  FaUsers,
+  FaLightbulb,
 } from 'react-icons/fa';
 
-const duties = [
+const experiences = [
   {
-    icon: FaBrain,
-    text: 'Built and deployed machine learning models using Python on real-world datasets, delivering data-driven insights.',
-    color: 'text-cyan-400',
-    glow: 'shadow-cyan-400/30',
+    role: 'AI Engineer Intern',
+    company: 'SwarmLens Pvt. Ltd',
+    period: 'Aug 10, 2026 – Present',
+    isCurrent: true,
+    accentColor: 'text-cyan-400',
+    borderColor: 'border-cyan-500/20',
+    badgeBg: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300',
+    gradient: 'from-cyan-500/15 to-blue-500/15',
+    orbColor: 'bg-cyan-500/10',
+    duties: [
+      {
+        icon: FaBrain,
+        text: 'Contributed to the R&D team in AI/ML research, experimentation, and development of internal and client-oriented proof-of-concept solutions.',
+        color: 'text-cyan-400',
+        glow: 'shadow-cyan-400/30',
+      },
+      {
+        icon: FaRobot,
+        text: 'Worked on Generative AI and LLM-based applications, gaining practical experience with RAG, AI agents, multi-agent workflows, and AI orchestration.',
+        color: 'text-blue-400',
+        glow: 'shadow-blue-400/30',
+      },
+      {
+        icon: FaDatabase,
+        text: 'Contributed to AI solutions involving data processing, analysis, information retrieval, automated insights, and report generation across different business and industrial use cases.',
+        color: 'text-teal-400',
+        glow: 'shadow-teal-400/30',
+      },
+      {
+        icon: FaUsers,
+        text: 'Collaborated with cross-functional team members and Subject Matter Experts (SMEs) to understand requirements and support the development and integration of AI-based proof-of-concept solutions.',
+        color: 'text-indigo-400',
+        glow: 'shadow-indigo-400/30',
+      },
+      {
+        icon: FaLightbulb,
+        text: 'Participated in AI architecture discussions, technical experimentation, debugging, and knowledge-sharing activities while working with modern AI/ML technologies.',
+        color: 'text-sky-400',
+        glow: 'shadow-sky-400/30',
+      },
+    ],
   },
   {
-    icon: FaCogs,
-    text: 'Managed the end-to-end ML pipeline, including data preprocessing, EDA, feature engineering, model training, and evaluation.',
-    color: 'text-blue-400',
-    glow: 'shadow-blue-400/30',
-  },
-  {
-    icon: FaChartLine,
-    text: 'Applied and fine-tuned algorithms such as Logistic Regression, KNN, Decision Trees, and SVM for improved accuracy and performance.',
-    color: 'text-purple-400',
-    glow: 'shadow-purple-400/30',
-  },
-  {
-    icon: FaDatabase,
-    text: 'Leveraged SQL and Python to analyze data, uncover trends, and support decision-making through meaningful insights.',
-    color: 'text-emerald-400',
-    glow: 'shadow-emerald-400/30',
+    role: 'Machine Learning & Data Science Intern',
+    company: 'Infotact Solutions',
+    period: 'Jun 2025 – Sep 2025',
+    isCurrent: false,
+    accentColor: 'text-violet-400',
+    borderColor: 'border-violet-500/20',
+    badgeBg: 'bg-violet-500/10 border-violet-500/30 text-violet-300',
+    gradient: 'from-violet-500/15 to-indigo-500/15',
+    orbColor: 'bg-violet-500/10',
+    duties: [
+      {
+        icon: FaBrain,
+        text: 'Developed machine learning models using Python and Scikit-learn for predictive analytics.',
+        color: 'text-violet-400',
+        glow: 'shadow-violet-400/30',
+      },
+      {
+        icon: FaCogs,
+        text: 'Performed data preprocessing, feature engineering, and model validation across end-to-end ML pipelines.',
+        color: 'text-purple-400',
+        glow: 'shadow-purple-400/30',
+      },
+      {
+        icon: FaChartLine,
+        text: 'Conducted exploratory data analysis (EDA) and statistical analysis on structured datasets to extract actionable insights.',
+        color: 'text-fuchsia-400',
+        glow: 'shadow-fuchsia-400/30',
+      },
+      {
+        icon: FaDatabase,
+        text: 'Evaluated model performance using Accuracy, Precision, Recall, F1-score, and Confusion Matrix benchmarks.',
+        color: 'text-emerald-400',
+        glow: 'shadow-emerald-400/30',
+      },
+      {
+        icon: FaUsers,
+        text: 'Collaborated with team members to deliver AI solutions within project timelines using Git for version control and collaborative development.',
+        color: 'text-blue-400',
+        glow: 'shadow-blue-400/30',
+      },
+    ],
   },
 ];
 
-export default function Experience() {
+function ExperienceCard({ exp, index }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = useCallback((e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: -y * 10, y: x * 10 });
+    setTilt({ x: -y * 8, y: x * 8 });
   }, []);
 
   const handleMouseLeave = useCallback(() => {
     setTilt({ x: 0, y: 0 });
   }, []);
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.7, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+        transition: 'transform 0.2s ease-out',
+      }}
+      className="relative group"
+    >
+      {/* Bioluminescent pulse border */}
+      <div
+        className={`absolute -inset-[1px] rounded-2xl pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-500`}
+        style={{
+          boxShadow: exp.isCurrent
+            ? '0 0 35px rgba(6,182,212,0.12), 0 0 70px rgba(59,130,246,0.08)'
+            : '0 0 35px rgba(139,92,246,0.12), 0 0 70px rgba(99,102,241,0.08)',
+        }}
+      />
+
+      {/* Card container */}
+      <div
+        className={`glass-strong rounded-2xl border ${exp.borderColor} p-6 md:p-8 relative overflow-hidden transition-all duration-300`}
+      >
+        {/* Glow orbs */}
+        <div
+          className={`absolute -top-16 -right-16 w-48 h-48 ${exp.orbColor} rounded-full blur-[80px] pointer-events-none`}
+        />
+        <div
+          className={`absolute -bottom-12 -left-12 w-40 h-40 ${exp.orbColor} rounded-full blur-[60px] pointer-events-none`}
+        />
+
+        {/* Card Header */}
+        <div className="relative z-10 flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6 border-b border-slate-800/80 pb-5">
+          <div className="flex items-start gap-4">
+            <div
+              className={`p-3 rounded-xl bg-gradient-to-br ${exp.gradient} border ${exp.borderColor} flex-shrink-0 mt-0.5`}
+            >
+              <HiBriefcase className={exp.accentColor} size={22} />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h3 className="text-xl font-display font-bold text-white">
+                  {exp.role}
+                </h3>
+                {exp.isCurrent && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[10px] font-mono font-semibold rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Current
+                  </span>
+                )}
+              </div>
+              <p className={`text-sm font-medium ${exp.accentColor} mt-1`}>
+                {exp.company}
+              </p>
+            </div>
+          </div>
+
+          <span
+            className={`text-xs md:text-sm font-mono border px-3.5 py-1.5 rounded-full w-fit self-start md:self-auto ${exp.badgeBg}`}
+          >
+            {exp.period}
+          </span>
+        </div>
+
+        {/* Duties list */}
+        <div className="relative z-10 space-y-4">
+          {exp.duties.map((duty, i) => {
+            const Icon = duty.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }}
+                className="flex items-start gap-3.5 group/duty"
+              >
+                <div
+                  className={`flex-shrink-0 p-2 rounded-lg bg-slate-800/70 border border-slate-700/50 shadow-md ${duty.glow} group-hover/duty:scale-110 transition-transform duration-300 mt-0.5`}
+                >
+                  <Icon className={duty.color} size={15} />
+                </div>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  {duty.text}
+                </p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function Experience() {
   return (
     <section id="experience" className="section-padding relative">
       <div className="max-w-4xl mx-auto">
@@ -58,92 +223,23 @@ export default function Experience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-14"
         >
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
             Work <span className="text-gradient">Experience</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-accent-blue to-accent-purple rounded-full mx-auto" />
+          <p className="text-slate-400 max-w-lg mx-auto text-sm md:text-base">
+            Professional industry experience in AI/ML research, Generative AI, and data science
+          </p>
+          <div className="w-20 h-1 bg-gradient-to-r from-accent-blue to-accent-purple rounded-full mx-auto mt-4" />
         </motion.div>
 
-        {/* 3D Floating Glassmorphism Pane */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{
-            transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-            transition: 'transform 0.2s ease-out',
-          }}
-          className="relative"
-        >
-          {/* Bioluminescent glow pulse */}
-          <motion.div
-            animate={{
-              boxShadow: [
-                '0 0 30px rgba(6,182,212,0.08), 0 0 60px rgba(59,130,246,0.06)',
-                '0 0 50px rgba(6,182,212,0.15), 0 0 100px rgba(59,130,246,0.1)',
-                '0 0 30px rgba(6,182,212,0.08), 0 0 60px rgba(59,130,246,0.06)',
-              ],
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -inset-[1px] rounded-2xl pointer-events-none"
-          />
-
-          {/* Card */}
-          <div className="glass-strong rounded-2xl border border-cyan-500/10 p-8 md:p-10 relative overflow-hidden">
-            {/* Decorative glow orbs */}
-            <div className="absolute -top-16 -right-16 w-48 h-48 bg-cyan-500/8 rounded-full blur-[80px] pointer-events-none" />
-            <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-blue-500/6 rounded-full blur-[60px] pointer-events-none" />
-
-            {/* Header */}
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-500/15 to-blue-500/15 border border-cyan-500/20">
-                  <HiBriefcase className="text-cyan-400" size={22} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-display font-bold text-white">
-                    Machine Learning &amp; Data Science Intern
-                  </h3>
-                </div>
-              </div>
-              <span className="text-sm font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-4 py-1.5 rounded-full w-fit">
-                06/2025 – 09/2025
-              </span>
-            </div>
-
-            {/* Duties with glowing icons */}
-            <div className="relative z-10 space-y-5">
-              {duties.map((duty, i) => {
-                const Icon = duty.icon;
-                return (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -25 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 + i * 0.1, duration: 0.5 }}
-                    className="flex items-start gap-4 group"
-                  >
-                    {/* Glowing icon */}
-                    <div
-                      className={`flex-shrink-0 p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/40 shadow-lg ${duty.glow} group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <Icon className={`${duty.color}`} size={16} />
-                    </div>
-                    <p className="text-sm md:text-base text-slate-300 leading-relaxed pt-0.5">
-                      {duty.text}
-                    </p>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
+        {/* Experience Cards Stack */}
+        <div className="space-y-8">
+          {experiences.map((exp, idx) => (
+            <ExperienceCard key={exp.company} exp={exp} index={idx} />
+          ))}
+        </div>
       </div>
     </section>
   );
