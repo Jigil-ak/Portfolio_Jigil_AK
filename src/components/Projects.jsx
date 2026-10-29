@@ -14,7 +14,7 @@ const projects = [
     gradient: 'from-sky-500/20 to-teal-500/20',
     accentColor: 'text-sky-400',
     borderHover: 'hover:border-sky-500/30',
-    github: null,
+    github: 'https://github.com/Jigil-ak/Multi-Agent-system-using-LanGraph-MCP-Supervisor-Guardrails-HILT.git',
     details: {
       overview:
         'A production-grade multi-agent AI travel planner built on LangGraph and the Model Context Protocol (MCP). The system orchestrates 6 specialized agents — Supervisor, Flight, Hotel, Weather, Budget, and Itinerary — with intelligent dynamic routing that eliminates redundant agent calls. It integrates 3 live external data sources and supports Human-in-the-Loop approval cycles with persistent async checkpointing via PostgreSQL.',
