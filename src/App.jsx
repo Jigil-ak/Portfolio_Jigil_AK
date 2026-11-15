@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import OceanBackground from './components/OceanBackground';
+import ScrollProgress from './components/ScrollProgress';
 
 const About = lazy(() => import('./components/About'));
 const Experience = lazy(() => import('./components/Experience'));
@@ -21,6 +22,7 @@ function LoadingFallback() {
 function App() {
   return (
     <div className="min-h-screen bg-transparent">
+      <ScrollProgress />
       <OceanBackground />
       <Navbar />
       <main>
